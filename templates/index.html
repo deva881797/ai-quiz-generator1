@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Select Topic{% endblock %}
+
+{% block content %}
+<div class="page">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <span class="header__icon">🧠</span>
+            <h1 class="header__title">AI Knowledge Quiz</h1>
+            <p class="header__subtitle">
+                Challenge yourself with AI-generated questions.
+                Select a topic and test your knowledge!
+            </p>
+        </header>
+
+        <!-- Topic Selection Grid -->
+        <div class="topic-grid">
+            {% for topic in topics %}
+            <form hx-post="{{ url_for('start_quiz') }}" hx-target="#main-content" hx-swap="innerHTML"
+                style="display: contents;">
+                <input type="hidden" name="topic" value="{{ topic.id }}">
+                <button type="submit" class="topic-card" style="--card-gradient: {{ topic.gradient }};">
+                    <span class="topic-card__icon">{{ topic.icon }}</span>
+                    <h3 class="topic-card__name">{{ topic.name }}</h3>
+                    <p class="topic-card__description">{{ topic.description }}</p>
+                    <span class="topic-card__arrow">→</span>
+                </button>
+            </form>
+            {% endfor %}
+        </div>
+
+        <!-- Footer Text -->
+        <p class="text-center mt-lg" style="color: var(--text-muted); font-size: 0.875rem;">
+            Powered by TinyLlama AI • 5 Questions per Quiz
+        </p>
+    </div>
+</div>
+{% endblock %}

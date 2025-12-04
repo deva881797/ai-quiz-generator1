@@ -1,0 +1,19 @@
+<!-- Reusable Question Component -->
+<div class="question-card">
+    <span class="question-number">Question {{ question_index + 1 }}</span>
+    <h2 class="question-text">{{ question.question }}</h2>
+
+    <div class="options-list">
+        {% set letters = ['A', 'B', 'C', 'D'] %}
+        {% for option in question.options %}
+        <label class="option {% if selected_answer == loop.index0 %}option--selected{% endif %}">
+            <input type="radio" name="selected_answer" value="{{ loop.index0 }}" {% if selected_answer==loop.index0
+                %}checked{% endif %} hx-post="{{ url_for('select_answer') }}" hx-trigger="change"
+                hx-include="closest form" hx-swap="none">
+            <span class="option__indicator"></span>
+            <span class="option__letter">{{ letters[loop.index0] }}</span>
+            <span class="option__text">{{ option }}</span>
+        </label>
+        {% endfor %}
+    </div>
+</div>

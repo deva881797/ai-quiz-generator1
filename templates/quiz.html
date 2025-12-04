@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz - {{ topic.name }}{% endblock %}
+
+{% block content %}
+<div class="page">
+    <div class="quiz-container">
+        <!-- Quiz Header -->
+        <div class="quiz-header">
+            <div class="quiz-topic">
+                <span class="quiz-topic__icon">{{ topic.icon }}</span>
+                <span class="quiz-topic__name">{{ topic.name }}</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>Question {{ current_index + 1 }} of {{ questions|length }}</span>
+                    <span>{{ ((current_index + 1) / questions|length * 100)|int }}% Complete</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar__fill"
+                        style="width: {{ ((current_index + 1) / questions|length * 100)|int }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="question-container">
+            {% set question = questions[current_index] %}
+            {% set selected_answer = answers[current_index] if current_index < answers|length else -1 %} <form
+                id="quiz-form">
+                <div class="question-card">
+                    <span class="question-number">Question {{ current_index + 1 }}</span>
+                    <h2 class="question-text">{{ question.question }}</h2>
+
+                    <div class="options-list">
+                        {% set letters = ['A', 'B', 'C', 'D'] %}
+                        {% for option in question.options %}
+                        <label class="option {% if selected_answer == loop.index0 %}option--selected{% endif %}">
+                            <input type="radio" name="selected_answer" value="{{ loop.index0 }}" {% if
+                                selected_answer==loop.index0 %}checked{% endif %}>
+                            <span class="option__indicator"></span>
+                            <span class="option__letter">{{ letters[loop.index0] }}</span>
+                            <span class="option__text">{{ option }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <input type="hidden" name="current_index" value="{{ current_index }}">
+                </form>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="quiz-nav">
+            <div class="quiz-nav__left">
+                {% if current_index > 0 %}
+                <form hx-post="{{ url_for('navigate') }}" hx-target="#main-content" hx-swap="innerHTML"
+                    hx-include="#quiz-form" style="display: contents;">
+                    <input type="hidden" name="direction" value="prev">
+                    <input type="hidden" name="current_index" value="{{ current_index }}">
+                    <button type="submit" class="btn btn--secondary">
+                        ← Previous
+                    </button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('index') }}" class="btn btn--ghost">
+                    ✕ Exit Quiz
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="quiz-nav__right">
+                {% if current_index < questions|length - 1 %} <form hx-post="{{ url_for('navigate') }}"
+                    hx-target="#main-content" hx-swap="innerHTML" hx-include="#quiz-form" style="display: contents;">
+                    <input type="hidden" name="direction" value="next">
+                    <input type="hidden" name="current_index" value="{{ current_index }}">
+                    <button type="submit" class="btn btn--primary">
+                        Next →
+                    </button>
+                    </form>
+                    {% else %}
+                    <form hx-post="{{ url_for('navigate') }}" hx-target="#main-content" hx-swap="innerHTML"
+                        hx-include="#quiz-form" style="display: contents;">
+                        <input type="hidden" name="direction" value="submit">
+                        <input type="hidden" name="current_index" value="{{ current_index }}">
+                        <button type="submit" class="btn btn--primary btn--large">
+                            Submit Quiz ✓
+                        </button>
+                    </form>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

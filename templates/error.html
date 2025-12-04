@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div class="page">
+    <div class="error-container">
+        <span class="error-icon">⚠️</span>
+        <h2 class="error-title">{{ error }}</h2>
+        <p class="error-message">{{ message }}</p>
+
+        <div class="flex-center gap-md">
+            <a href="{{ url_for('index') }}" class="btn btn--primary">
+                ← Back to Home
+            </a>
+            {% if topic %}
+            <form hx-post="{{ url_for('start_quiz') }}" hx-target="#main-content" hx-swap="innerHTML"
+                style="display: contents;">
+                <input type="hidden" name="topic" value="{{ topic.id }}">
+                <button type="submit" class="btn btn--secondary">
+                    🔄 Try Again
+                </button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="card mt-lg" style="text-align: left;">
+            <h4 style="margin-bottom: var(--spacing-sm);">Troubleshooting</h4>
+            <ul style="color: var(--text-muted); padding-left: var(--spacing-md);">
+                <li>Ensure Ollama is running: <code>ollama serve</code></li>
+                <li>Check TinyLlama is installed: <code>ollama pull tinyllama</code></li>
+                <li>Verify Ollama is accessible at localhost:11434</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!-- Loading Screen - Shown while AI generates questions -->
+<div class="page">
+    <div class="loading-container" hx-get="{{ url_for('generate_quiz', topic_id=topic.id) }}" hx-trigger="load"
+        hx-target="#main-content" hx-swap="innerHTML">
+
+        <!-- Topic Badge -->
+        <div class="quiz-topic mb-lg">
+            <span class="quiz-topic__icon">{{ topic.icon }}</span>
+            <span class="quiz-topic__name">{{ topic.name }}</span>
+        </div>
+
+        <!-- Animated Spinner -->
+        <div class="loading-spinner"></div>
+
+        <!-- Loading Text -->
+        <p class="loading-text">
+            Generating your quiz
+            <span class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </p>
+
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: var(--spacing-md);">
+            AI is crafting 5 unique questions just for you
+        </p>
+    </div>
+</div>
